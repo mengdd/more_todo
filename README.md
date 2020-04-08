@@ -25,12 +25,12 @@ flutter packages pub run build_runner watch
 
 ## Changelog
 ### v0.1.0
-Single screen of TODOs in a list.
-To show the simplest usage of local database.
+A single screen of TODOs in a list.
+To show the simplest usage of a local database.
 
 ![todo list in v0.1.0](./screenshots/todo-app-v0.1.0.png)
 
-* Add: from bottom input field.
+* Add: from the bottom input field.
 * Delete: Slide and click the delete action.
-* Update: Check/Uncheck the checkbox to mark item as completed or not.
-* Query: Watch all todos in database and show them in list.
+* Update: Check/Uncheck the checkbox to mark the item as completed or not.
+* Query: Watch all todos in the database and show them in the list.

@@ -16,7 +16,7 @@ class Todo extends DataClass implements Insertable<Todo> {
   Todo(
       {@required this.id,
       @required this.title,
-      @required this.content,
+      this.content,
       this.category,
       @required this.completed});
   factory Todo.fromData(Map<String, dynamic> data, GeneratedDatabase db,
@@ -29,8 +29,8 @@ class Todo extends DataClass implements Insertable<Todo> {
       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       title:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}title']),
-      content:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}body']),
+      content: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}description']),
       category:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}category']),
       completed:
@@ -137,11 +137,10 @@ class TodosCompanion extends UpdateCompanion<Todo> {
   TodosCompanion.insert({
     this.id = const Value.absent(),
     @required String title,
-    @required String content,
+    this.content = const Value.absent(),
     this.category = const Value.absent(),
     this.completed = const Value.absent(),
-  })  : title = Value(title),
-        content = Value(content);
+  }) : title = Value(title);
   TodosCompanion copyWith(
       {Value<int> id,
       Value<String> title,
@@ -186,9 +185,9 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
   GeneratedTextColumn get content => _content ??= _constructContent();
   GeneratedTextColumn _constructContent() {
     return GeneratedTextColumn(
-      'body',
+      'description',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -238,8 +237,6 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
     if (d.content.present) {
       context.handle(_contentMeta,
           content.isAcceptableValue(d.content.value, _contentMeta));
-    } else if (isInserting) {
-      context.missing(_contentMeta);
     }
     if (d.category.present) {
       context.handle(_categoryMeta,
@@ -270,7 +267,7 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
       map['title'] = Variable<String, StringType>(d.title.value);
     }
     if (d.content.present) {
-      map['body'] = Variable<String, StringType>(d.content.value);
+      map['description'] = Variable<String, StringType>(d.content.value);
     }
     if (d.category.present) {
       map['category'] = Variable<int, IntType>(d.category.value);

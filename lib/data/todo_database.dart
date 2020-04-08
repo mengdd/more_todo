@@ -14,7 +14,7 @@ class Todos extends Table {
 
   TextColumn get title => text().withLength(min: 1, max: 50)();
 
-  TextColumn get content => text().named('body')();
+  TextColumn get content => text().nullable().named('description')();
 
   IntColumn get category => integer().nullable()();
 
@@ -33,7 +33,7 @@ class TodoDatabase extends _$TodoDatabase {
 
   Stream<List<Todo>> watchAllTodos() => select(todos).watch();
 
-  Future insertTodo(Todo todo) => into(todos).insert(todo);
+  Future insertTodo(TodosCompanion todo) => into(todos).insert(todo);
 
   Future updateTodo(Todo todo) => update(todos).replace(todo);
 

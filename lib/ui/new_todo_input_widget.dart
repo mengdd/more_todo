@@ -33,8 +33,9 @@ class _NewTodoInputState extends State<NewTodoInput> {
               },
             ),
           ),
-          RaisedButton(
-            child: Text('Add'),
+          IconButton(
+            icon: Icon(Icons.add_circle),
+            color: Colors.blue,
             onPressed: () {
               _insertNewTodoItem(controller.text, context);
             },

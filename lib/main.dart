@@ -56,19 +56,23 @@ class _MyHomePageState extends State<MyHomePage> {
           itemCount: todos.length,
           itemBuilder: (BuildContext context, int index) {
             final item = todos[index];
-            return _buildItem(context, item);
+            return _buildItem(context, item, database);
           },
         );
       },
     );
   }
 
-  Widget _buildItem(BuildContext context, Todo item) {
+  Widget _buildItem(BuildContext context, Todo item, TodoDatabase database) {
     return Slidable(
       actionExtentRatio: 0.2,
       actionPane: SlidableDrawerActionPane(),
-      child: ListTile(
+      child: CheckboxListTile(
         title: Text(item.title),
+        value: item.completed,
+        onChanged: (newValue) {
+          database.updateTodo(item.copyWith(completed: newValue));
+        },
       ),
       secondaryActions: <Widget>[
         IconSlideAction(
@@ -88,8 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Colors.red,
           icon: Icons.remove,
           onTap: () {
-            TodoDatabase database =
-                Provider.of<TodoDatabase>(context, listen: false);
             database.deleteTodo(item);
           },
         ),

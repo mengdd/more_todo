@@ -28,6 +28,16 @@ class TodoDatabase extends _$TodoDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  Future<List<Todo>> getAllTodos() => select(todos).get();
+
+  Stream<List<Todo>> watchAllTodos() => select(todos).watch();
+
+  Future insertTodo(Todo todo) => into(todos).insert(todo);
+
+  Future updateTodo(Todo todo) => update(todos).replace(todo);
+
+  Future deleteTodo(Todo todo) => delete(todos).delete(todo);
 }
 
 LazyDatabase _openConnection() {

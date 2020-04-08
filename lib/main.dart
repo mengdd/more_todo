@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:more_todo/data/todo_database.dart';
 import 'package:more_todo/ui/new_todo_input_widget.dart';
 import 'package:provider/provider.dart';
@@ -63,6 +64,36 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildItem(BuildContext context, Todo item) {
-    return ListTile(title: Text(item.title));
+    return Slidable(
+      actionExtentRatio: 0.2,
+      actionPane: SlidableDrawerActionPane(),
+      child: ListTile(
+        title: Text(item.title),
+      ),
+      secondaryActions: <Widget>[
+        IconSlideAction(
+          caption: 'Archive',
+          color: Colors.blue,
+          icon: Icons.archive,
+          onTap: () {},
+        ),
+        IconSlideAction(
+          caption: 'Share',
+          color: Colors.indigo,
+          icon: Icons.share,
+          onTap: () {},
+        ),
+        IconSlideAction(
+          caption: 'Delete',
+          color: Colors.red,
+          icon: Icons.remove,
+          onTap: () {
+            TodoDatabase database =
+                Provider.of<TodoDatabase>(context, listen: false);
+            database.deleteTodo(item);
+          },
+        ),
+      ],
+    );
   }
 }

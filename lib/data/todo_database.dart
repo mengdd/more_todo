@@ -21,7 +21,14 @@ class Todos extends Table {
   BoolColumn get completed => boolean().withDefault(Constant(false))();
 }
 
-@UseMoor(tables: [Todos])
+@DataClassName('Category')
+class Categories extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  TextColumn get name => text().withLength(min: 1, max: 50)();
+}
+
+@UseMoor(tables: [Todos, Categories])
 class TodoDatabase extends _$TodoDatabase {
   // we tell the database where to store the data with this constructor
   TodoDatabase() : super(_openConnection());

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:moor/moor.dart';
 import 'package:more_todo/dabase_provider.dart';
-import 'package:more_todo/data/todos_dao.dart';
+import 'package:more_todo/data/categories_dao.dart';
+import 'package:more_todo/data/todo_database.dart';
 import 'package:provider/provider.dart';
 
 class NewCategoryInput extends StatefulWidget {
@@ -49,9 +51,10 @@ class _NewCategoryInputState extends State<NewCategoryInput> {
 
   void _insertNewCategory(String input, BuildContext context) {
     print('submitted! $input');
-    TodosDao todosDao =
-        Provider.of<DatabaseProvider>(context, listen: false).todosDao;
+    CategoriesDao categoriesDao =
+        Provider.of<DatabaseProvider>(context, listen: false).categoriesDao;
 
+    categoriesDao.insertCategory(CategoriesCompanion(name: Value(input)));
     //TODO
     _resetValuesAfterSubmit();
   }

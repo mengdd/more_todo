@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:more_todo/dabase_provider.dart';
 import 'package:more_todo/data/todo_database.dart';
 import 'package:more_todo/data/todos_dao.dart';
+import 'package:more_todo/ui/new_category_input_widget.dart';
 import 'package:more_todo/ui/new_todo_input_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Todo'),
       ),
+      drawer: _buildDrawer(context),
       body: Column(
         children: <Widget>[
           Expanded(
@@ -47,8 +49,44 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Drawer _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: <Widget>[
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'My Todos',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
+                ),
+                NewCategoryInput(),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.inbox),
+            title: Text('Inbox'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   StreamBuilder<List<Todo>> _buildList(BuildContext context) {
-    TodosDao todosDao = Provider.of<DatabaseProvider>(context, listen: false).todosDao;
+    TodosDao todosDao =
+        Provider.of<DatabaseProvider>(context, listen: false).todosDao;
     return StreamBuilder(
       stream: todosDao.watchAllTodos(),
       builder: (BuildContext context, AsyncSnapshot<List<Todo>> snapshot) {

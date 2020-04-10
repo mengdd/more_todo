@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:moor/moor.dart';
 import 'package:moor_ffi/moor_ffi.dart';
+import 'package:more_todo/data/categories.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -20,14 +21,6 @@ class Todos extends Table {
 
   BoolColumn get completed => boolean().withDefault(Constant(false))();
 }
-
-@DataClassName('Category')
-class Categories extends Table {
-  IntColumn get id => integer().autoIncrement()();
-
-  TextColumn get name => text().withLength(min: 1, max: 50)();
-}
-
 @UseMoor(tables: [Todos, Categories])
 class TodoDatabase extends _$TodoDatabase {
   // we tell the database where to store the data with this constructor

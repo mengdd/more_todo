@@ -1,4 +1,5 @@
 import 'package:moor/moor.dart';
+import 'package:more_todo/data/categories.dart';
 import 'package:more_todo/data/todo_database.dart';
 
 part 'categories_dao.g.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:more_todo/dabase_provider.dart';
+import 'package:more_todo/data/categories_dao.dart';
 import 'package:more_todo/data/todo_database.dart';
 import 'package:more_todo/data/todos_dao.dart';
 import 'package:more_todo/ui/new_category_input_widget.dart';
@@ -50,38 +51,65 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Drawer _buildDrawer(BuildContext context) {
+    CategoriesDao categoriesDao =
+        Provider.of<DatabaseProvider>(context, listen: false).categoriesDao;
     return Drawer(
-      child: ListView(
-        children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'My Todos',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
-                ),
-                NewCategoryInput(),
-              ],
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.inbox),
-            title: Text('Inbox'),
-            onTap: () {
-              Navigator.pop(context);
+      child: StreamBuilder(
+        stream: categoriesDao.watchAllCategories(),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<Category>> snapshot) {
+          List<Category> categories = snapshot.data ?? List();
+          return ListView.builder(
+            itemCount: categories.length + 2,
+            itemBuilder: (BuildContext context, int index) {
+              return _buildDrawerItem(context, categories, index);
             },
-          ),
-        ],
+          );
+        },
       ),
     );
+  }
+
+  Widget _buildDrawerItem(
+      BuildContext context, List<Category> categories, int index) {
+    if (index == 0) {
+      return DrawerHeader(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'My Todos',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+            NewCategoryInput(),
+          ],
+        ),
+      );
+    } else if (index == 1) {
+      return ListTile(
+        leading: Icon(Icons.inbox),
+        title: Text('Inbox'),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      );
+    } else {
+      Category category = categories[index - 2];
+      return ListTile(
+        leading: Icon(Icons.inbox),
+        title: Text(category.name),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      );
+    }
   }
 
   StreamBuilder<List<Todo>> _buildList(BuildContext context) {

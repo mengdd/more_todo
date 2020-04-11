@@ -17,17 +17,35 @@ class Todos extends Table {
 
   TextColumn get content => text().nullable().named('description')();
 
-  IntColumn get category => integer().nullable()();
+  IntColumn get category =>
+      integer().nullable().customConstraint('NULL REFERENCES categories(id)')();
 
   BoolColumn get completed => boolean().withDefault(Constant(false))();
 }
+
 @UseMoor(tables: [Todos, Categories])
 class TodoDatabase extends _$TodoDatabase {
   // we tell the database where to store the data with this constructor
   TodoDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (migrator, from, to) async {
+          print('migration from $from to $to');
+          if (from == 1) {
+            print('do migration from 1');
+            migrator.deleteTable(todos.actualTableName);
+            migrator.createTable(todos);
+            migrator.createTable(categories);
+          }
+        },
+        beforeOpen: (details) async {
+          await customStatement('PRAGMA foreign_keys = ON');
+        },
+      );
 }
 
 LazyDatabase _openConnection() {

@@ -196,11 +196,8 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
   @override
   GeneratedIntColumn get category => _category ??= _constructCategory();
   GeneratedIntColumn _constructCategory() {
-    return GeneratedIntColumn(
-      'category',
-      $tableName,
-      true,
-    );
+    return GeneratedIntColumn('category', $tableName, true,
+        $customConstraints: 'NULL REFERENCES categories(id)');
   }
 
   final VerificationMeta _completedMeta = const VerificationMeta('completed');

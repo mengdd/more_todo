@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:more_todo/dabase_provider.dart';
 import 'package:more_todo/data/categories_dao.dart';
 import 'package:more_todo/data/todo_database.dart';
+import 'package:more_todo/data/todo_with_category.dart';
 import 'package:more_todo/data/todos_dao.dart';
 import 'package:more_todo/ui/new_category_input_widget.dart';
 import 'package:more_todo/ui/new_todo_input_widget.dart';
@@ -112,17 +113,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  StreamBuilder<List<Todo>> _buildList(BuildContext context) {
+  Widget _buildList(BuildContext context) {
     TodosDao todosDao =
         Provider.of<DatabaseProvider>(context, listen: false).todosDao;
     return StreamBuilder(
       stream: todosDao.watchAllTodos(),
-      builder: (BuildContext context, AsyncSnapshot<List<Todo>> snapshot) {
-        final todos = snapshot.data ?? List();
+      builder: (BuildContext context,
+          AsyncSnapshot<List<TodoWithCategory>> snapshot) {
+        final todosWithCategory = snapshot.data ?? List();
         return ListView.builder(
-          itemCount: todos.length,
+          itemCount: todosWithCategory.length,
           itemBuilder: (BuildContext context, int index) {
-            final item = todos[index];
+            final item = todosWithCategory[index];
             return _buildItem(context, item, todosDao);
           },
         );
@@ -130,15 +132,16 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildItem(BuildContext context, Todo item, TodosDao todosDao) {
+  Widget _buildItem(
+      BuildContext context, TodoWithCategory item, TodosDao todosDao) {
     return Slidable(
       actionExtentRatio: 0.2,
       actionPane: SlidableDrawerActionPane(),
       child: CheckboxListTile(
-        title: Text(item.title),
-        value: item.completed,
+        title: Text(item.todo.title),
+        value: item.todo.completed,
         onChanged: (newValue) {
-          todosDao.updateTodo(item.copyWith(completed: newValue));
+          todosDao.updateTodo(item.todo.copyWith(completed: newValue));
         },
       ),
       secondaryActions: <Widget>[
@@ -159,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Colors.red,
           icon: Icons.remove,
           onTap: () {
-            todosDao.deleteTodo(item);
+            todosDao.deleteTodo(item.todo);
           },
         ),
       ],

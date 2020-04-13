@@ -8,4 +8,5 @@ part of 'todos_dao.dart';
 
 mixin _$TodosDaoMixin on DatabaseAccessor<TodoDatabase> {
   $TodosTable get todos => db.todos;
+  $CategoriesTable get categories => db.categories;
 }

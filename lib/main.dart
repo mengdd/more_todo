@@ -38,6 +38,24 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Todo'),
+        actions: <Widget>[
+          Row(
+            children: <Widget>[
+              Text('Hide completed'),
+              Consumer<DatabaseProvider>(
+                builder: (BuildContext context,
+                        DatabaseProvider databaseProvider, Widget child) =>
+                    Switch(
+                  value: databaseProvider.hideCompleted,
+                  onChanged: (value) {
+                    print('changed $value');
+                    databaseProvider.hideCompleted = value;
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       drawer: _buildDrawer(context),
       body: Column(
@@ -122,8 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildList(BuildContext context) {
     return Consumer<DatabaseProvider>(
       builder: (context, databaseProvider, child) => StreamBuilder(
-        stream: databaseProvider.todosDao
-            .watchTodosInCategory(databaseProvider.selectedCategory),
+        stream: databaseProvider.watchTodosInCategory(),
         builder: (BuildContext context,
             AsyncSnapshot<List<TodoWithCategory>> snapshot) {
           print('buid list for ${databaseProvider.selectedCategory}');

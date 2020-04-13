@@ -54,9 +54,26 @@ class _NewCategoryInputState extends State<NewCategoryInput> {
     CategoriesDao categoriesDao =
         Provider.of<DatabaseProvider>(context, listen: false).categoriesDao;
 
-    categoriesDao.insertCategory(CategoriesCompanion(name: Value(input)));
-    //TODO
-    _resetValuesAfterSubmit();
+    categoriesDao.insertCategory(CategoriesCompanion(name: Value(input))).then(
+      (_) {
+        _resetValuesAfterSubmit();
+      },
+    ).catchError(
+      (e) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text(
+              'Invalid data! Category should not be empty or too long!',
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ),
+          ),
+        );
+      },
+      test: (e) => e is InvalidDataException,
+    );
   }
 
   void _resetValuesAfterSubmit() {

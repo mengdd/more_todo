@@ -35,14 +35,14 @@ class DatabaseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void insertNewTodoItem(String title) {
+  Future insertNewTodoItem(String title) {
     final todo = TodosCompanion(
         title: Value(title),
         completed: Value(false),
         category: _selectedCategory != null
             ? Value(_selectedCategory.id)
             : Value.absent());
-    todosDao.insertTodo(todo);
+    return todosDao.insertTodo(todo);
   }
 
   Stream<List<TodoWithCategory>> watchTodosInCategory() {

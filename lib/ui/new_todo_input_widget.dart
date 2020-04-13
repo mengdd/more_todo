@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moor/moor.dart';
 import 'package:more_todo/dabase_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -48,8 +49,23 @@ class _NewTodoInputState extends State<NewTodoInput> {
     print('submitted! $input');
     var databaseProvider =
         Provider.of<DatabaseProvider>(context, listen: false);
-    databaseProvider.insertNewTodoItem(input);
-    _resetValuesAfterSubmit();
+    databaseProvider.insertNewTodoItem(input).then((_) {
+      _resetValuesAfterSubmit();
+    }).catchError(
+      (e) {
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Invalid data! Todo item should not be empty or too long!',
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ),
+          ),
+        );
+      },
+      test: (e) => e is InvalidDataException,
+    );
   }
 
   void _resetValuesAfterSubmit() {

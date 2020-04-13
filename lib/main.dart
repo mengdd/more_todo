@@ -14,7 +14,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Provider(
+    return ChangeNotifierProvider(
       create: (_) => DatabaseProvider(),
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -73,6 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildDrawerItem(
       BuildContext context, List<Category> categories, int index) {
+    var databaseProvider =
+        Provider.of<DatabaseProvider>(context, listen: false);
     if (index == 0) {
       return DrawerHeader(
         decoration: BoxDecoration(
@@ -97,7 +99,9 @@ class _MyHomePageState extends State<MyHomePage> {
       return ListTile(
         leading: Icon(Icons.inbox),
         title: Text('Inbox'),
+        selected: databaseProvider.selectedCategory == null,
         onTap: () {
+          databaseProvider.setSelectedCategory(null);
           Navigator.pop(context);
         },
       );
@@ -106,7 +110,9 @@ class _MyHomePageState extends State<MyHomePage> {
       return ListTile(
         leading: Icon(Icons.inbox),
         title: Text(category.name),
+        selected: databaseProvider.selectedCategory == category,
         onTap: () {
+          databaseProvider.setSelectedCategory(category);
           Navigator.pop(context);
         },
       );
@@ -114,21 +120,23 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildList(BuildContext context) {
-    TodosDao todosDao =
-        Provider.of<DatabaseProvider>(context, listen: false).todosDao;
-    return StreamBuilder(
-      stream: todosDao.watchAllTodos(),
-      builder: (BuildContext context,
-          AsyncSnapshot<List<TodoWithCategory>> snapshot) {
-        final todosWithCategory = snapshot.data ?? List();
-        return ListView.builder(
-          itemCount: todosWithCategory.length,
-          itemBuilder: (BuildContext context, int index) {
-            final item = todosWithCategory[index];
-            return _buildItem(context, item, todosDao);
-          },
-        );
-      },
+    return Consumer<DatabaseProvider>(
+      builder: (context, databaseProvider, child) => StreamBuilder(
+        stream: databaseProvider.todosDao
+            .watchTodosInCategory(databaseProvider.selectedCategory),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<TodoWithCategory>> snapshot) {
+          print('buid list for ${databaseProvider.selectedCategory}');
+          final todosWithCategory = snapshot.data ?? List();
+          return ListView.builder(
+            itemCount: todosWithCategory.length,
+            itemBuilder: (BuildContext context, int index) {
+              final item = todosWithCategory[index];
+              return _buildItem(context, item, databaseProvider.todosDao);
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -139,6 +147,8 @@ class _MyHomePageState extends State<MyHomePage> {
       actionPane: SlidableDrawerActionPane(),
       child: CheckboxListTile(
         title: Text(item.todo.title),
+        subtitle: Text(
+            'category ${item.category != null ? item.category.name : 'Inbox'}'),
         value: item.todo.completed,
         onChanged: (newValue) {
           todosDao.updateTodo(item.todo.copyWith(completed: newValue));

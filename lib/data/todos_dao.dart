@@ -16,6 +16,28 @@ class TodosDao extends DatabaseAccessor<TodoDatabase> with _$TodosDaoMixin {
 
   Future<List<Todo>> getAllTodos() => select(todos).get();
 
+  Stream<List<TodoWithCategory>> watchTodosInCategory(Category category) {
+    final query = select(todos).join([
+      leftOuterJoin(categories, categories.id.equalsExp(todos.category)),
+    ]);
+
+    print('watch category: $category');
+    if (category != null) {
+      query.where(categories.id.equals(category.id));
+    } else {
+      query.where(isNull(categories.id));
+    }
+
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return TodoWithCategory(
+          todo: row.readTable(todos),
+          category: row.readTable(categories),
+        );
+      }).toList();
+    });
+  }
+
   Stream<List<TodoWithCategory>> watchAllTodos() {
     final query = select(todos).join([
       leftOuterJoin(categories, categories.id.equalsExp(todos.category)),

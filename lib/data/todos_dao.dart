@@ -53,7 +53,7 @@ class TodosDao extends DatabaseAccessor<TodoDatabase> with _$TodosDaoMixin {
     });
   }
 
-  Future insertTodo(TodosCompanion todo) => into(todos).insert(todo);
+  Future insertTodo(Insertable<Todo> todo) => into(todos).insert(todo);
 
   Future updateTodo(Todo todo) => update(todos).replace(todo);
 

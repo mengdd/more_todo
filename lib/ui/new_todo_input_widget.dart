@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moor/moor.dart';
 import 'package:more_todo/dabase_provider.dart';
-import 'package:more_todo/data/todo_database.dart';
-import 'package:more_todo/data/todos_dao.dart';
 import 'package:provider/provider.dart';
 
 class NewTodoInput extends StatefulWidget {
@@ -49,13 +46,9 @@ class _NewTodoInputState extends State<NewTodoInput> {
 
   void _insertNewTodoItem(String input, BuildContext context) {
     print('submitted! $input');
-    TodosDao todosDao =
-        Provider.of<DatabaseProvider>(context, listen: false).todosDao;
-    final todo = TodosCompanion(
-      title: Value(input),
-      completed: Value(false),
-    );
-    todosDao.insertTodo(todo);
+    var databaseProvider =
+        Provider.of<DatabaseProvider>(context, listen: false);
+    databaseProvider.insertNewTodoItem(input);
     _resetValuesAfterSubmit();
   }
 

@@ -17,8 +17,9 @@ class Todos extends Table {
 
   TextColumn get content => text().nullable().named('description')();
 
-  IntColumn get category =>
-      integer().nullable().customConstraint('NULL REFERENCES categories(id)')();
+  IntColumn get category => integer()
+      .nullable()
+      .customConstraint('NULL REFERENCES categories(id) ON DELETE CASCADE')();
 
   BoolColumn get completed => boolean().withDefault(Constant(false))();
 }

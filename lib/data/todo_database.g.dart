@@ -197,7 +197,7 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
   GeneratedIntColumn get category => _category ??= _constructCategory();
   GeneratedIntColumn _constructCategory() {
     return GeneratedIntColumn('category', $tableName, true,
-        $customConstraints: 'NULL REFERENCES categories(id)');
+        $customConstraints: 'NULL REFERENCES categories(id) ON DELETE CASCADE');
   }
 
   final VerificationMeta _completedMeta = const VerificationMeta('completed');

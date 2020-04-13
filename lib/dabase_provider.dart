@@ -49,4 +49,8 @@ class DatabaseProvider extends ChangeNotifier {
     return todosDao.watchTodosInCategory(_selectedCategory,
         hideCompleted: hideCompleted);
   }
+
+  Future deleteCategory(Category category) {
+    return categoriesDao.deleteCategory(category);
+  }
 }

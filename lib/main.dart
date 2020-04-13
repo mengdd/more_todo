@@ -134,13 +134,14 @@ class _MyHomePageState extends State<MyHomePage> {
           Navigator.pop(context);
         },
         onLongPress: () {
-          _showDeleteCategoryDialog(context);
+          _showDeleteCategoryDialog(context, databaseProvider, category);
         },
       );
     }
   }
 
-  void _showDeleteCategoryDialog(BuildContext context) {
+  void _showDeleteCategoryDialog(BuildContext context,
+      DatabaseProvider databaseProvider, Category category) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -171,6 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(color: Colors.red),
             ),
             onPressed: () {
+              databaseProvider.deleteCategory(category);
               Navigator.pop(context);
             },
           ),

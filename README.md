@@ -38,11 +38,14 @@ To show the simplest usage of a local database.
 ### v0.2.0
 Todos with Category.
 Use foreign keys and join.
-Do a database migration from last version.
+Do a database migration from the last version.
 
-* Show categories at drawer menu. User can add new category or delete category.
+![categories in v0.2.0](./screenshots/todo-app-v0.2.0-categories.png)
+![todo list in v0.2.0](./screenshots/todo-app-v0.2.0-todos.png)
+
+* Show categories at drawer menu. Users can add a new category or delete a category.
 * Todos without a category are put under 'Inbox'.
 * If a category is deleted, all todos under it would be deleted too.
-* A Switch button is shown at top to hide all completed todos.
+* A Switch button is shown (at the top) to hide all completed todos.
 * Show error hint when trying to insert invalid data.
 * Some UI refinements.

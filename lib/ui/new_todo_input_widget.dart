@@ -22,6 +22,7 @@ class _NewTodoInputState extends State<NewTodoInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -34,6 +35,7 @@ class _NewTodoInputState extends State<NewTodoInput> {
             ),
           ),
           IconButton(
+            iconSize: 30,
             icon: Icon(Icons.add_circle),
             color: Colors.blue,
             onPressed: () {

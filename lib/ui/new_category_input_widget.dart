@@ -36,6 +36,7 @@ class _NewCategoryInputState extends State<NewCategoryInput> {
             ),
           ),
           IconButton(
+            iconSize: 30,
             icon: Icon(
               Icons.add_circle,
               color: Colors.indigo,

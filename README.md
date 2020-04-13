@@ -34,3 +34,15 @@ To show the simplest usage of a local database.
 * Delete: Slide and click the delete action.
 * Update: Check/Uncheck the checkbox to mark the item as completed or not.
 * Query: Watch all todos in the database and show them in the list.
+
+### v0.2.0
+Todos with Category.
+Use foreign keys and join.
+Do a database migration from last version.
+
+* Show categories at drawer menu. User can add new category or delete category.
+* Todos without a category are put under 'Inbox'.
+* If a category is deleted, all todos under it would be deleted too.
+* A Switch button is shown at top to hide all completed todos.
+* Show error hint when trying to insert invalid data.
+* Some UI refinements.

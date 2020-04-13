@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:more_todo/dabase_provider.dart';
 import 'package:more_todo/data/categories_dao.dart';
 import 'package:more_todo/data/todo_database.dart';
@@ -7,6 +6,7 @@ import 'package:more_todo/data/todo_with_category.dart';
 import 'package:more_todo/data/todos_dao.dart';
 import 'package:more_todo/ui/new_category_input_widget.dart';
 import 'package:more_todo/ui/new_todo_input_widget.dart';
+import 'package:more_todo/ui/todo_item_widget.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
@@ -203,40 +203,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildItem(
       BuildContext context, TodoWithCategory item, TodosDao todosDao) {
-    return Slidable(
-      actionExtentRatio: 0.2,
-      actionPane: SlidableDrawerActionPane(),
-      child: CheckboxListTile(
-        title: Text(item.todo.title),
-        subtitle: Text(
-            'category ${item.category != null ? item.category.name : 'Inbox'}'),
-        value: item.todo.completed,
-        onChanged: (newValue) {
-          todosDao.updateTodo(item.todo.copyWith(completed: newValue));
-        },
-      ),
-      secondaryActions: <Widget>[
-        IconSlideAction(
-          caption: 'Archive',
-          color: Colors.blue,
-          icon: Icons.archive,
-          onTap: () {},
-        ),
-        IconSlideAction(
-          caption: 'Share',
-          color: Colors.indigo,
-          icon: Icons.share,
-          onTap: () {},
-        ),
-        IconSlideAction(
-          caption: 'Delete',
-          color: Colors.red,
-          icon: Icons.remove,
-          onTap: () {
-            todosDao.deleteTodo(item.todo);
-          },
-        ),
-      ],
-    );
+    return TodoItemWidget(item, todosDao);
   }
 }

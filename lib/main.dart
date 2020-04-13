@@ -133,8 +133,50 @@ class _MyHomePageState extends State<MyHomePage> {
           databaseProvider.setSelectedCategory(category);
           Navigator.pop(context);
         },
+        onLongPress: () {
+          _showDeleteCategoryDialog(context);
+        },
       );
     }
+  }
+
+  void _showDeleteCategoryDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('DELETE'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text('Do you want to delete this category?'),
+            SizedBox(
+              height: 8,
+            ),
+            Text(
+              'All the items under this category would be gone.',
+              style: TextStyle(color: Colors.redAccent),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('NO'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          FlatButton(
+            child: Text(
+              'YES',
+              style: TextStyle(color: Colors.red),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildList(BuildContext context) {
